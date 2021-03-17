@@ -2,13 +2,13 @@ package com.openwebserver.core;
 
 
 import FileManager.Folder;
-import Tree.TreeArrayList;
 import com.openwebserver.core.Connection.Connection;
 import com.openwebserver.core.Objects.Headers.Header;
 import com.openwebserver.core.Routing.Router;
 
 import com.openwebserver.core.Security.SSL.KeyManager;
 import com.openwebserver.core.Security.SecurityManager;
+import com.tree.TreeArrayList;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -16,7 +16,6 @@ import java.util.Objects;
 
 public class WebServer{
 
-    private final String name;
     public static Header serverHeader;
     public static Folder tempFolder;
 
@@ -33,7 +32,6 @@ public class WebServer{
     private boolean closed = false;
 
     public WebServer(String name) {
-        this.name = name;
         serverHeader = new Header("Server", name);
     }
 
