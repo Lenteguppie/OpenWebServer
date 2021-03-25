@@ -26,6 +26,10 @@ public class Certificate<T>{
         deserialize(l);
     }
 
+    public Certificate(String path){
+        this(new Local(path));
+    }
+
     public T deserialize(Local key) {
         try {
             this.encoded = key.read();
@@ -34,6 +38,7 @@ public class Certificate<T>{
             return this.key;
         } catch (IOException | CertificateException | NoSuchAlgorithmException | InvalidKeySpecException e) {
             e.printStackTrace();
+            System.exit(-1);
         }
         return null;
     }

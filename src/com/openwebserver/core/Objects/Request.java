@@ -43,7 +43,7 @@ public class Request{
     private RequestHandler handler;
 
     private Request(Headers headers){
-        this.path = headers.getPath();
+        this.path = URLDecoder.decode(headers.getPath(),Charset.defaultCharset());
         this.method = Route.Method.valueOf(headers.getMethod());
         this.headers = headers;
         this.domain = Router.getDomain(getAlias());
@@ -75,6 +75,14 @@ public class Request{
 
     public HashMap<String, String> GET() {
         return GET;
+    }
+
+    public HashMap<String, Pair<String, Local>> FILES() {
+        return FILES;
+    }
+
+    public Local FILES(String key) {
+        return FILES.get(key).getValue();
     }
 
     public String GET(String key) {

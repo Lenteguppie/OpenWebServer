@@ -93,13 +93,13 @@ public class Response implements Content {
             else if (o instanceof Map) {
                 return simple(code, JSONObject.wrap(o), type);
             }
-            else if (o instanceof Collection) {
-                return simple(code, new JSONArray().put(o), type);
+            else if (o instanceof Collection || o.getClass().isArray()) {
+                return simple(code, new JSONArray(o), type);
             }
             else if (o instanceof Throwable) {
                 return new WebException((Throwable) o).respond();
             }
-            else if (o instanceof String || o instanceof Float || o instanceof Double || o instanceof Integer || o instanceof Character || o instanceof Long) {
+            else if (o instanceof String || o instanceof Float || o instanceof Double || o instanceof Integer || o instanceof Character || o instanceof Long || o instanceof Boolean) {
                 return new Response(code, String.valueOf(o), (type != null) ? type : Content.Type.Text.edit("plain"));
             }
             else {
