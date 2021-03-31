@@ -4,10 +4,8 @@ package com.openwebserver.core.Routing;
 import com.openwebserver.core.Domain;
 import com.openwebserver.core.Objects.Request;
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
@@ -84,20 +82,8 @@ public class Route {
         return require;
     }
 
-    public Collection<String> getRESTParams() {
-        return RESTParams.values();
-    }
-
-    public HashMap<Integer, String> getRESTMap() {
-        return RESTParams;
-    }
-
     protected boolean hasRequired(Request request) {
         return request.GET().keySet().containsAll(Arrays.asList(getRequired())) || request.POST().keySet().containsAll(Arrays.asList(getRequired()));
-    }
-
-    public boolean requires(){
-        return getRequired().length >0;
     }
 
     public boolean isEnabled() {
@@ -122,7 +108,7 @@ public class Route {
         }
     }
 
-    public boolean isREST() {
+    private boolean isREST() {
         return !RESTParams.isEmpty();
     }
 
@@ -132,14 +118,6 @@ public class Route {
 
     public Domain getDomain() {
         return domain;
-    }
-
-    public void print(){
-        try {
-            System.out.println("\tROUTE:"+ getDomain().getUrl().toString()+getPath());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
     }
 
     public static class RESTDecoder {
@@ -168,7 +146,7 @@ public class Route {
             return true;
         }
 
-        public static void PatternReader(String value, BiConsumer<Integer, String> matchConsumer) {
+        private static void PatternReader(String value, BiConsumer<Integer, String> matchConsumer) {
             Matcher matcher = pattern.matcher(value);
             ArrayList<String> pathIndexed = new ArrayList<>(Arrays.asList(value.split("/")));
             while (matcher.find()) {

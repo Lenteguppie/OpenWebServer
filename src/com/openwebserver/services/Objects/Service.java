@@ -3,7 +3,6 @@ package com.openwebserver.services.Objects;
 
 import com.openwebserver.core.Annotations.Session;
 import com.openwebserver.core.Content.Code;
-import com.openwebserver.core.Domain;
 import com.openwebserver.core.Handlers.RequestHandler;
 import com.openwebserver.core.Objects.Response;
 import com.openwebserver.core.Routing.Route;
@@ -19,7 +18,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 
-public class Service extends RequestHandler implements Consumer<RequestHandler> {
+public class Service extends RequestHandler {
 
     private final String name;
     private final ArrayList<RequestHandler> routes = new ArrayList<>();
@@ -41,9 +40,10 @@ public class Service extends RequestHandler implements Consumer<RequestHandler> 
                         throw new WebException(e).addRequest(request);
                     }
                 });
-                requestHandler.setReflection(method);
-                requestHandler.setOnRegisterListener(this);
-                setSessionHandler(this.getSessionHandler());
+                requestHandler.setSessionSpecification(method.isAnnotationPresent(Session.class)? method.getAnnotation(Session.class): null);
+                requestHandler.setSessionHandler(this.getSessionHandler());
+                requestHandler.setCORSPolicy(method.isAnnotationPresent(CORS.class)? method.getAnnotation(CORS.class): null);
+                requestHandler.setNeedsAuthentication(method.isAnnotationPresent(Authorize.class));
                 requestHandler.addPrefix(this);
                 routes.add(requestHandler);
             }
@@ -90,11 +90,6 @@ public class Service extends RequestHandler implements Consumer<RequestHandler> 
 
     public static <T> T getService(Class<T> serviceClass) throws ServiceManager.ServiceManagerException {
         return ServiceManager.getService(serviceClass);
-    }
-
-    @Override
-    public void accept(RequestHandler handler) {
-        handler.setDomain(this.getDomain());
     }
 
     public static class ServiceException extends WebException{
